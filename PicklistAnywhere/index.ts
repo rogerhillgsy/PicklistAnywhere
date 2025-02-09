@@ -1,16 +1,20 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
-import { HelloWorld, IHelloWorldProps } from "./HelloWorld";
 import * as React from "react";
+import * as ReactDom from "react-dom";
+import { IDropdownOption } from "@fluentui/react/lib/Dropdown";
+import { Picklist } from "./Picklist";
 
 export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs, IOutputs> {
+    private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
     private notifyOutputChanged: () => void;
-
+    private container: HTMLDivElement;
+    private availableOptions: IDropdownOption[];
+    private currentValue?: string | number;
+    private _context : ComponentFramework.Context<IInputs>;
     /**
      * Empty constructor.
      */
-    constructor() {
-        // Empty
-    }
+    constructor() { }
 
     /**
      * Used to initialize the control instance. Controls can kick off remote server calls and other initialization actions here.
@@ -25,6 +29,52 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
         state: ComponentFramework.Dictionary
     ): void {
         this.notifyOutputChanged = notifyOutputChanged;
+        this.availableOptions = [];
+        this._context = context;
+        context.parameters.optionsList.raw?.split(",").forEach( o => { 
+            this.availableOptions.push({key: o, text: o});
+        });
+        this.renderControl(context);
+    }
+    
+    private renderControl( context : ComponentFramework.Context<IInputs> ) {
+        let currentValue: string = "";
+        let attributeType = context.parameters.targetAttribute.type;
+;
+
+        if(attributeType === "Whole.None" ){
+            currentValue = context.parameters.targetAttribute != null && context.parameters.targetAttribute.raw != null && context.parameters.targetAttribute.raw.toString() != 0
+            ? context.parameters.targetAttribute.raw.toString()
+            : "-1";
+        }
+        else if(attributeType === "SingleLine.Text"){
+            currentValue = context.parameters.targetAttribute != null && context.parameters.targetAttribute.raw != null && context.parameters.targetAttribute.raw.toString() != "" && 
+            !isNaN(context.parameters.targetAttribute.raw)
+            ? context.parameters.targetAttribute.raw
+            : -1
+        }
+
+        const selector = React.createElement( Picklist,  {
+            selectedValue: currentValue,
+            availableOptions: [{key: -1, text: '---'}, ...this.availableOptions],
+            isDisabled: context.mode.isControlDisabled,
+            onChange: (selectedOption?: IDropdownOption) => {
+                if (typeof selectedOption === 'undefined' || selectedOption.key === -1) {
+					this.currentValue = undefined
+				} else {
+                    if (attributeType === "Whole.None" ){
+                        this.currentValue = <number>selectedOption.key
+                    } else if(attributeType === "SingleLine.Text"){
+                        this.currentValue = <string>selectedOption.key
+                    } else {
+                        this.currentValue = undefined;
+                    }
+				}
+
+				this.notifyOutputChanged();
+            }
+        })
+        return selector;
     }
 
     /**
@@ -33,10 +83,7 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
-        const props: IHelloWorldProps = { name: 'Power Apps' };
-        return React.createElement(
-            HelloWorld, props
-        );
+        return this.renderControl(context);
     }
 
     /**
@@ -44,7 +91,7 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as "bound" or "output"
      */
     public getOutputs(): IOutputs {
-        return { };
+        return { targetAttribute: this.currentValue};
     }
 
     /**
@@ -52,6 +99,6 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
      * i.e. cancelling any pending remote calls, removing listeners, etc.
      */
     public destroy(): void {
-        // Add code to cleanup control if necessary
+        ReactDom.unmountComponentAtNode(this.container);
     }
 }
