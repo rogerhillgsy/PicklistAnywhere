@@ -6,7 +6,7 @@ export interface IPicklistProps {
     selectedValue: string;
     availableOptions: IDropdownOption[];
     isDisabled: boolean;
-    onChange: (selectedOption?: IDropdownOption) => void;cd ..
+    onChange: (selectedOption?: IDropdownOption) => void;
 }
 
 export const Picklist: React.FunctionComponent<IPicklistProps> = (props) => {

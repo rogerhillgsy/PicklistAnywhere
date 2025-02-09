@@ -14,7 +14,7 @@
         {
             "name": "SWA: Run PicklistAnywhere",
             "request": "launch",
-            "type": "pwa-chrome",
+            "type": "chrome",
             "url": "http://localhost:4280",
             "preLaunchTask": "swa: start PicklistAnywhere",
             "webRoot": "${workspaceFolder}/",

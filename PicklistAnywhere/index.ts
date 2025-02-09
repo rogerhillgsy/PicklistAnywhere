@@ -14,7 +14,9 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
     /**
      * Empty constructor.
      */
-    constructor() { }
+    constructor() { 
+        // Empty
+    }
 
     /**
      * Used to initialize the control instance. Controls can kick off remote server calls and other initialization actions here.
@@ -38,20 +40,19 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
     }
     
     private renderControl( context : ComponentFramework.Context<IInputs> ) {
-        let currentValue: string = "";
-        let attributeType = context.parameters.targetAttribute.type;
+        let currentValue = "";
+        const attributeType = context.parameters.targetAttribute.type;
 ;
 
         if(attributeType === "Whole.None" ){
-            currentValue = context.parameters.targetAttribute != null && context.parameters.targetAttribute.raw != null && context.parameters.targetAttribute.raw.toString() != 0
+            currentValue = typeof context.parameters.targetAttribute?.raw === 'string' && context.parameters.targetAttribute.raw.toString() !== '0'
             ? context.parameters.targetAttribute.raw.toString()
             : "-1";
         }
         else if(attributeType === "SingleLine.Text"){
-            currentValue = context.parameters.targetAttribute != null && context.parameters.targetAttribute.raw != null && context.parameters.targetAttribute.raw.toString() != "" && 
-            !isNaN(context.parameters.targetAttribute.raw)
+            currentValue = typeof context.parameters.targetAttribute?.raw === 'string' && context.parameters.targetAttribute.raw.toString() != "" 
             ? context.parameters.targetAttribute.raw
-            : -1
+            : "-1";
         }
 
         const selector = React.createElement( Picklist,  {
@@ -63,9 +64,9 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
 					this.currentValue = undefined
 				} else {
                     if (attributeType === "Whole.None" ){
-                        this.currentValue = <number>selectedOption.key
+                        this.currentValue = selectedOption.key as number
                     } else if(attributeType === "SingleLine.Text"){
-                        this.currentValue = <string>selectedOption.key
+                        this.currentValue = selectedOption.key as string
                     } else {
                         this.currentValue = undefined;
                     }
