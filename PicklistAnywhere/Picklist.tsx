@@ -25,8 +25,11 @@ export const Picklist: React.FunctionComponent<IPicklistProps> = (props) => {
 
 const colorFocus = "#a9a9a9";
 
-export const dropdownStyles = (props: IDropdownStyleProps):Partial<IDropdownStyles> => ({    
-    title: [{
+export const dropdownStyles = (props: IDropdownStyleProps):Partial<IDropdownStyles> => ({  
+  root: [{
+    width : "100%"
+  }],
+  title: [{
       color: "black",
       display: "block",
       fontWeight: props.isOpen===true ? "400" : "600",
@@ -34,7 +37,7 @@ export const dropdownStyles = (props: IDropdownStyleProps):Partial<IDropdownStyl
       borderWidth: "1px",
       borderStyle: "solid",
       borderColor: props.isOpen===true ? "black" : "transparent",         
-      backgroundColor : "transparent",             
+      backgroundColor : "#E5E5E5",             
       outline: "none",     
       outlineColor: "transparent",
       outlineOffset: "0",
@@ -58,6 +61,8 @@ export const dropdownStyles = (props: IDropdownStyleProps):Partial<IDropdownStyl
       outlineColor: "transparent",
       outlineOffset: "0",
       boxShadow: "none",
+      width: "100%",
+      backgroundColor: "#f5f5f5",
       selectors:{
         ":focus:after": {
           outline: "none",

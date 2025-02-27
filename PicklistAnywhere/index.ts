@@ -11,6 +11,7 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
     private availableOptions: IDropdownOption[];
     private currentValue?: string | number;
     private _context : ComponentFramework.Context<IInputs>;
+    private attributeType: string;
     /**
      * Empty constructor.
      */
@@ -34,38 +35,42 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
         this.availableOptions = [];
         this._context = context;
         context.parameters.optionsList.raw?.split(",").forEach( o => { 
-            this.availableOptions.push({key: o, text: o});
+            this.availableOptions.push({key: o.toString(), text: o.toString()});
         });
-        this.renderControl(context);
+        this.renderControl( context);
     }
     
     private renderControl( context : ComponentFramework.Context<IInputs> ) {
-        let currentValue = "";
-        const attributeType = context.parameters.targetAttribute.type;
-;
+        let attributeType2 = "";
+        attributeType2 = context.parameters.targetAttribute.type + "";
+        const t = context.parameters.targetAttribute.type === "Whole.None";
 
-        if(attributeType === "Whole.None" ){
-            currentValue = typeof context.parameters.targetAttribute?.raw === 'string' && context.parameters.targetAttribute.raw.toString() !== '0'
-            ? context.parameters.targetAttribute.raw.toString()
-            : "-1";
+        if(context.parameters.targetAttribute.type === "Whole.None" ){
+            // currentValue = typeof context.parameters.targetAttribute?.raw === 'string' && context.parameters.targetAttribute.raw.toString() !== '0'
+            // ? context.parameters.targetAttribute.raw.toString()
+            // : "-1";
+            this.currentValue = context.parameters.targetAttribute.raw as number;
+            console.log("Attribute Type: " +  context.parameters.targetAttribute.type);
         }
-        else if(attributeType === "SingleLine.Text"){
-            currentValue = typeof context.parameters.targetAttribute?.raw === 'string' && context.parameters.targetAttribute.raw.toString() != "" 
+        else if(context.parameters.targetAttribute.type === "SingleLine.Text"){
+            this.currentValue = typeof context.parameters.targetAttribute?.raw === 'string' && context.parameters.targetAttribute.raw.toString() != "" 
             ? context.parameters.targetAttribute.raw
             : "-1";
+            console.log("Attribute Type2: " +  context.parameters.targetAttribute.type);
         }
 
+        console.log(`Current value is ${this.currentValue}`);
         const selector = React.createElement( Picklist,  {
-            selectedValue: currentValue,
-            availableOptions: [{key: -1, text: '---'}, ...this.availableOptions],
+            selectedValue: this.currentValue?.toString() ?? "-1",
+            availableOptions: [{key: "-1", text: '---'}, ...this.availableOptions],
             isDisabled: context.mode.isControlDisabled,
             onChange: (selectedOption?: IDropdownOption) => {
                 if (typeof selectedOption === 'undefined' || selectedOption.key === -1) {
-					this.currentValue = undefined
+					this.currentValue = undefined;
 				} else {
-                    if (attributeType === "Whole.None" ){
+                    if (context.parameters.targetAttribute.type === "Whole.None" ){
                         this.currentValue = selectedOption.key as number
-                    } else if(attributeType === "SingleLine.Text"){
+                    } else if(context.parameters.targetAttribute.type === "SingleLine.Text"){
                         this.currentValue = selectedOption.key as string
                     } else {
                         this.currentValue = undefined;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest>
-  <control namespace="RBH" constructor="PicklistAnywhere" version="0.0.1"
+  <control namespace="RBH" constructor="PicklistAnywhere" version="0.0.2"
     display-name-key="PicklistAnywhere"
     description-key="Use a picklist on a text field to limit values entered" control-type="virtual">
     <external-service-usage enabled="false" />
@@ -14,6 +14,9 @@
     <type-group name="numberOrString">
       <type>Whole.None</type>
       <type>SingleLine.Text</type>
+      <type>Decimal</type>
+      <type>Currency</type>
+      <type>FP</type>
     </type-group>
     <resources>
       <code path="index.ts" order="1" />
