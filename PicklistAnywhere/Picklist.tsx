@@ -3,7 +3,7 @@ import { Dropdown, IDropdownOption, IDropdownStyleProps, IDropdownStyles } from 
 
 
 export interface IPicklistProps {
-    selectedValue: string;
+    selectedValue: string | number;
     availableOptions: IDropdownOption[];
     isDisabled: boolean;
     onChange: (selectedOption?: IDropdownOption) => void;

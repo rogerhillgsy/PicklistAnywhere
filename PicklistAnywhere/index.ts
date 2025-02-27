@@ -10,12 +10,12 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
     private container: HTMLDivElement;
     private availableOptions: IDropdownOption[];
     private currentValue?: string | number;
-    private _context : ComponentFramework.Context<IInputs>;
+    private _context: ComponentFramework.Context<IInputs>;
     private attributeType: string;
     /**
      * Empty constructor.
      */
-    constructor() { 
+    constructor() {
         // Empty
     }
 
@@ -34,52 +34,51 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
         this.notifyOutputChanged = notifyOutputChanged;
         this.availableOptions = [];
         this._context = context;
-        context.parameters.optionsList.raw?.split(",").forEach( o => { 
-            this.availableOptions.push({key: o.toString(), text: o.toString()});
+        const attributes = context.parameters.targetAttribute.attributes as { Type?: string } | undefined;
+        this.attributeType = attributes?.Type ?? "";
+        context.parameters.optionsList.raw?.split(",").forEach((o) => {
+            switch (this.attributeType) {
+                case "integer":
+                    this.availableOptions.push({ key: parseInt(o), text: o });
+                    break;
+                case "decimal":
+                    this.availableOptions.push({ key: parseFloat(o), text: o });
+                    break;
+                case "string":
+                    this.availableOptions.push({ key: o, text: o });
+                    break;
+            }
         });
-        this.renderControl( context);
+        this.renderControl(context);
     }
-    
-    private renderControl( context : ComponentFramework.Context<IInputs> ) {
-        let attributeType2 = "";
-        attributeType2 = context.parameters.targetAttribute.type + "";
-        const t = context.parameters.targetAttribute.type === "Whole.None";
 
-        if(context.parameters.targetAttribute.type === "Whole.None" ){
-            // currentValue = typeof context.parameters.targetAttribute?.raw === 'string' && context.parameters.targetAttribute.raw.toString() !== '0'
-            // ? context.parameters.targetAttribute.raw.toString()
-            // : "-1";
+    private renderControl(context: ComponentFramework.Context<IInputs>) {
+        if (this.attributeType === "integer" || this.attributeType === "decimal") {
             this.currentValue = context.parameters.targetAttribute.raw as number;
-            console.log("Attribute Type: " +  context.parameters.targetAttribute.type);
-        }
-        else if(context.parameters.targetAttribute.type === "SingleLine.Text"){
-            this.currentValue = typeof context.parameters.targetAttribute?.raw === 'string' && context.parameters.targetAttribute.raw.toString() != "" 
-            ? context.parameters.targetAttribute.raw
-            : "-1";
-            console.log("Attribute Type2: " +  context.parameters.targetAttribute.type);
+        } else if (this.attributeType === "string") {
+            this.currentValue = (context.parameters.targetAttribute.raw as string) ?? "undefined";
         }
 
-        console.log(`Current value is ${this.currentValue}`);
-        const selector = React.createElement( Picklist,  {
-            selectedValue: this.currentValue?.toString() ?? "-1",
-            availableOptions: [{key: "-1", text: '---'}, ...this.availableOptions],
+        const selector = React.createElement(Picklist, {
+            selectedValue: this.currentValue ?? "undefined",
+            availableOptions: [{ key: "undefined", text: "---" }, ...this.availableOptions],
             isDisabled: context.mode.isControlDisabled,
             onChange: (selectedOption?: IDropdownOption) => {
-                if (typeof selectedOption === 'undefined' || selectedOption.key === -1) {
-					this.currentValue = undefined;
-				} else {
-                    if (context.parameters.targetAttribute.type === "Whole.None" ){
-                        this.currentValue = selectedOption.key as number
-                    } else if(context.parameters.targetAttribute.type === "SingleLine.Text"){
-                        this.currentValue = selectedOption.key as string
+                if (typeof selectedOption === "undefined" || selectedOption.key === "undefined") {
+                    this.currentValue = undefined;
+                } else {
+                    if (this.attributeType == "integer" || this.attributeType == "decimal") {
+                        this.currentValue = selectedOption.key as number;
+                    } else if (this.attributeType == "string") {
+                        this.currentValue = selectedOption.key as string;
                     } else {
                         this.currentValue = undefined;
                     }
-				}
+                }
 
-				this.notifyOutputChanged();
-            }
-        })
+                this.notifyOutputChanged();
+            },
+        });
         return selector;
     }
 
@@ -97,7 +96,7 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as "bound" or "output"
      */
     public getOutputs(): IOutputs {
-        return { targetAttribute: this.currentValue};
+        return { targetAttribute: this.currentValue === "undefined" ? null : this.currentValue };
     }
 
     /**
