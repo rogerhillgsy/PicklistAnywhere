@@ -42,15 +42,21 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
                     this.availableOptions.push({ key: parseInt(o), text: o });
                     break;
                 case "decimal":
+                case "money":
+                case "double":
                     this.availableOptions.push({ key: parseFloat(o), text: o });
                     break;
                 case "string":
                     this.availableOptions.push({ key: o, text: o });
                     break;
+                default:
+                    console.log(`Unexpected attribute type ${this.attributeType}`);
             }
         });
         this.renderControl(context);
     }
+
+    private readonly numericTypes = new Set(["integer", "decimal", "money", "double"]);
 
     private renderControl(context: ComponentFramework.Context<IInputs>) {
         if (this.attributeType === "integer" || this.attributeType === "decimal") {
@@ -67,7 +73,7 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
                 if (typeof selectedOption === "undefined" || selectedOption.key === "undefined") {
                     this.currentValue = undefined;
                 } else {
-                    if (this.attributeType == "integer" || this.attributeType == "decimal") {
+                    if (this.numericTypes.has(this.attributeType)) {
                         this.currentValue = selectedOption.key as number;
                     } else if (this.attributeType == "string") {
                         this.currentValue = selectedOption.key as string;
