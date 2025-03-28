@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest>
-  <control namespace="RBH" constructor="PicklistAnywhere" version="0.0.3"
-    display-name-key="PicklistAnywhere"
-    description-key="Use a picklist on a text field to limit values entered" control-type="virtual">
+  <control namespace="RBH" constructor="PicklistAnywhere" version="0.0.5"
+    display-name-key="PicklistAnywhere_Display_Key"
+    description-key="PicklistAnywhere_Desc_Key" control-type="virtual">
     <external-service-usage enabled="false" />
 
     <property name="targetAttribute" display-name-key="targetAttribute_Display_Key"
@@ -23,9 +23,8 @@
       <platform-library name="React" version="16.14.0" />
       <platform-library name="Fluent" version="9.46.2" />
       <!-- UNCOMMENT TO ADD MORE RESOURCES
-      <css path="css/TextBoxPicklist.css" order="1" />
+      <css path="css/TextBoxPicklist.css" order="1" /> -->
       <resx path="strings/TextBoxPicklist.1033.resx" version="1.0.0" />
-      -->
     </resources>
   </control>
 </manifest>
