@@ -22,7 +22,7 @@
   -->
   <!--
   <PropertyGroup>
-    <SolutionPackageType>Managed</SolutionPackageType>
+    <SolutionPackageType>Both</SolutionPackageType>
     <SolutionPackageEnableLocalization>false</SolutionPackageEnableLocalization>
   </PropertyGroup>
   -->
