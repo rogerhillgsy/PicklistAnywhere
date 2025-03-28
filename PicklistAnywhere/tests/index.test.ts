@@ -41,5 +41,9 @@ describe("Test top level index.ts", () => {
         const component = picklistControl.updateView(context);
         render(component);
 
+      // Assert
+      // Output changed should not be called (yet).
+      expect(outputChanged.mock.calls).toHaveLength(0);
+
     });
 });

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest>
-  <control namespace="RBH" constructor="PicklistAnywhere" version="0.0.3"
+  <control namespace="RBH" constructor="PicklistAnywhere" version="0.0.4"
     display-name-key="PicklistAnywhere"
     description-key="Use a picklist on a text field to limit values entered" control-type="virtual">
     <external-service-usage enabled="false" />
