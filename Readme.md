@@ -16,13 +16,13 @@ Commands to try
 |pac org select|Select a specific org for deployment.|
 |pac org who|Show current connection details.|
 | **Set up the solution packaging**||
-| mkdir TaggingSolution2||
-| cd TaggingSolution2||
+| mkdir PicklistAnywhere||
+| cd PicklistAnywhere||
 | pac solution init --publisher-name rbhc --publisher-prefix rbhc||
 | pac solution add-reference --path ../||
 | **These steps below should be** | **sufficient to build and deploy to the "pcf org who" environment**|
-|dotnet build|Use in Tagging solution directory to build the solution ready for deployment|
-|pac solution import|Use in TaggingSolution subdirectory. Update the control in CRM. |
+|dotnet build|Use in solution directory to build the solution ready for deployment|
+|pac solution import|Use in Solution subdirectory. Update the control in CRM. |
 |pac solution publish| Publish the unmanaged solution |
 |Changes to ControlManifest.Input.xml|Make sure to increase the control version number so that changes appear in CRM|
 
