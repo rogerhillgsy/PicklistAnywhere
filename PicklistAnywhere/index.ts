@@ -52,7 +52,7 @@ export class PicklistAnywhere implements ComponentFramework.ReactControl<IInputs
                 default:
                     console.log(`Unexpected attribute type ${this.attributeType}`);
             }
-        });
+        }); 
         this.renderControl(context);
     }
 
