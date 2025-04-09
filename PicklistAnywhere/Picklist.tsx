@@ -19,6 +19,7 @@ export const Picklist: React.FunctionComponent<IPicklistProps> = (props) => {
                 props.onChange(option);
             } }
             styles = {dropdownStyles}
+            role="dropdown"
         />
     );
 }
@@ -34,7 +35,7 @@ export const dropdownStyles = (props: IDropdownStyleProps):Partial<IDropdownStyl
       display: "block",
       fontWeight: props.isOpen===true ? "400" : "600",
       fontStretch: "normal",
-      borderWidth: "1px",
+      borderWidth: "1px", 
       borderStyle: "solid",
       borderColor: props.isOpen===true ? "black" : "transparent",         
       backgroundColor : "#E5E5E5",             
